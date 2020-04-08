@@ -505,6 +505,13 @@ class RTCRtpReceiver:
                 # range [0.5, 1.5] times the calculated interval.
                 await asyncio.sleep(0.5 + random.random())
 
+                # force IRD Frame
+                # https://github.com/aiortc/aiortc/issues/58
+                if (time.time() - last_idr_ts) > 1.0:
+                    for ssrc, stream in self.__remote_streams.items():
+                        await self._send_rtcp_pli(media_ssrc=ssrc)
+                    last_idr_ts = time.time()
+
                 # RTCP RR
                 reports = []
                 for ssrc, stream in self.__remote_streams.items():
