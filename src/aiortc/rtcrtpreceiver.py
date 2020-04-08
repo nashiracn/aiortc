@@ -500,6 +500,7 @@ class RTCRtpReceiver:
         self.__log_debug("- RTCP started")
 
         try:
+            last_idr_ts = time.time()
             while True:
                 # The interval between RTCP packets is varied randomly over the
                 # range [0.5, 1.5] times the calculated interval.
